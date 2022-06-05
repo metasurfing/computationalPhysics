@@ -4,18 +4,18 @@ import numpy as np
 from numInt import trapInt1D,simpInt1D
 
 def f(x):
-    return x**4 - 2*x +1
+    return x**4 - 2*x + 1
 
 N1 = 10
 N2 = 20
 a = 0.0
 b = 2.0
 
-It1 = trapInt1D(a,b,N1,f)
-Is1 = simpInt1D(a,b,N1,f)
+It1 = trapInt1D(f,a,b,N1)
+Is1 = simpInt1D(f,a,b,N1)
 
-It2 = trapInt1D(a,b,N2,f)
-Is2 = simpInt1D(a,b,N2,f)
+It2 = trapInt1D(f,a,b,N2)
+Is2 = simpInt1D(f,a,b,N2)
 
 print(It1)
 print(Is1)
