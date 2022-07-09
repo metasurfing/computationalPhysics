@@ -66,12 +66,14 @@ def trapInt1D(func,a=0,b=1,N=4,opt='fixed',AbsTol=10**-3,pout = 0):
             R = R + [Intcur]
 
             for mm in range(1,ii):
-                R = R + [R[mm-1] + 1/(4**(mm+1)-1)*(R[mm-1]-Rm1[mm-1])]
+                R = R + [R[mm-1] + 1/(4**mm-1)*(R[mm-1]-Rm1[mm-1])]
 
-            err = abs(1/(4**ii -1)*(R[ii-2]-Rm1[ii-2]))
+            err = abs(1/(4**(ii-1)-1)*(R[ii-2]-Rm1[ii-2]))
             if(pout):
-                print('Current integration step: {0}, Value: {1}, Error: {2}'.format(Ncur, R[ii-2], err))
+                print('Current integration step: {0}, Value: {1}, Error: {2}'.format(Ncur, R[ii-1] , err))
             if(err < AbsTol):
+                if(pout):
+                    print('R = {}'.format(R))
                 return Intcur, err
 
             Intm1 = Intcur
@@ -103,7 +105,7 @@ def simpInt1D(func,a=0,b=1,N=4,opt='fixed',AbsTol=10**-3,pout=0):
         for kk in range(1,N//2):
             so += func(a+2*kk*h)
     else:
-        print("N most be even for this simpInt to work correctly")
+        print("N most be even for simpInt to work correctly")
         return 0
 
     s = s0 + 4*se + 2*so
