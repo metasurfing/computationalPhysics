@@ -150,3 +150,54 @@ def simpInt1D(func,a=0,b=1,N=4,opt='fixed',AbsTol=10**-3,pout=0):
             Intm1 = Intcur
 
     return 'The selected option in opt is not supported'
+
+def gaussQuadInt1D(func,a=0,b=1,N=4,xk=[],wk=[],opt='fixed',AbsTol=10**-3,pout = 0):
+    from numpy import any
+    if(not (any(xk) and any(wk))):
+        #Calculate sample points and weights
+        xk, wk = gaussxwab(a,b,N)
+
+    #Calculate the integral
+    s = 0.0
+    for k in range(N):
+        s += wk[k]*func(xk[k])
+    return s
+
+#Helper function for gaussQuadInt1D
+#Calculates the sample points and weights for a function defined
+#over the interval [a, b]
+def gaussxwab(a,b,N):
+    x, w = gaussxw(N)
+    return 0.5*(b-a)*x + 0.5*(b+a), 0.5*(b-a)*w
+
+#Helper function for gaussxwab
+#Calculates the sample points and weights for a function defined
+#over the interval [-1, 1]
+def gaussxw(N):
+    from numpy import ones, copy, cos, tan, pi, linspace
+
+    #Set up initial guesses for zeros of the Legendre Polynomials
+    a = linspace(3,4*N-1,N)/(4*N+2)
+    x = cos(pi*a+1/(8*N*N*tan(a)))
+
+    #Set tolerances for Newton's method
+    epsilon = 1e-15
+    delta = 1.0
+
+    #Run Newton-Raphson to find the zeroes
+    while delta>epsilon:
+        p0 = ones(N,float)
+        p1 = copy(x)
+        for k in range(1,N):
+            p0,p1 = p1, ((2*k+1)*x*p1-k*p0)/(k+1)
+        #dp = (N+1)*(p0-x*p1)/(1-x*x) #dp from the book
+        dp = N/(x*x-1)*(x*p1-p0) #derivative that you derived
+        dx = p1/dp
+        x -= dx
+        delta = max(abs(dx))
+
+    #Calculate the weights at the sample points
+    w = 2/(1-x*x)/(dp*dp) # formula from book
+    #w = 2*(N+1)*(N+1)/(N*N*(1-x*x)*dp*dp) #from code in the book
+
+    return x, w
