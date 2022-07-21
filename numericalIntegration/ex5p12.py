@@ -7,10 +7,10 @@ h_bar = Planck_bar()
 c0 = LightSpeed()
 
 def w(z):
-    return (z/(1-z))**3/(exp(z/(1-z))-1)/(1-z)**2
+    return (z)**3/((exp(z/(1-z))-1)*(1-z)**5)
 
 a = 0.00
-b = 0.99
+b = 0.999
 N = 50
 
 s = gaussQuadInt1D(w,a,b,N)
