@@ -11,3 +11,7 @@ def Planck_bar():
     from math import pi
     #Returns normalized Planck's constant
     return (6.62607015*10**-34)/(2*pi)
+
+def Newton_Gravity():
+    #Returns Newton's Gravitational constant
+    return 6.674*10**-11

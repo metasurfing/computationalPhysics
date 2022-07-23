@@ -151,7 +151,7 @@ def simpInt1D(func,a=0,b=1,N=4,opt='fixed',AbsTol=10**-3,pout=0):
 
     return 'The selected option in opt is not supported'
 
-def gaussQuadInt1D(func,a=0,b=1,N=4,xk=[],wk=[],opt='fixed',AbsTol=10**-3,pout = 0):
+def gaussQuadInt1D(func,a=0,b=1,N=4,xk=[],wk=[]):
     from numpy import any
     if(not (any(xk) and any(wk))):
         #Calculate sample points and weights
@@ -163,6 +163,21 @@ def gaussQuadInt1D(func,a=0,b=1,N=4,xk=[],wk=[],opt='fixed',AbsTol=10**-3,pout =
         s += wk[k]*func(xk[k])
     return s
 
+def gaussQuadInt2D(func,ax=0,bx=1,ay=0,by=1,N=4,xk=[],yk=[],wkx=[],wky = []):
+    from numpy import any
+    if(not (any(xk) and any(wky) and any(yk) and any(wkx))):
+        #Calculate sample points and weights
+        xk, wkx = gaussxwab(ax,bx,N)
+        yk, wky = gaussxwab(ay,by,N)
+
+    #Calculate the integral
+    s = 0.0
+    #This is really inefficient but quick and dirty may want to find a way
+    #to vectorize this
+    for ii in range(N):
+        for jj in range(N):
+            s += wkx[ii]*wky[jj]*func(xk[ii],yk[jj])
+    return s
 #Helper function for gaussQuadInt1D
 #Calculates the sample points and weights for a function defined
 #over the interval [a, b]
