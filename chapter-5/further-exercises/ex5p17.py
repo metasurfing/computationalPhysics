@@ -1,6 +1,6 @@
 import sys
 
-sys.path.insert(0,'../numericalIntegration/')
+sys.path.insert(0,'../Users/lukeszymanski/Documents/python/computationalPhysics/chapter-5/numericalIntegration/')
 from numpy import exp, linspace, zeros, log
 from pylab import figure, plot, show, xlabel, ylabel
 #Part a
@@ -40,8 +40,10 @@ show()
 #Part d:
 from math import pi, sqrt
 def gamma(a):
+    import sys
+    sys.path.insert(0,'../Users/lukeszymanski/Documents/python/computationalPhysics/chapter-5/numericalIntegration/')
     from numpy import exp, log
-    from numInt import gaussQuadInt1D, trapInt1D
+    from numInt import gaussQuadInt1D
     def integrand(z):
         x = a*z/(1-z)
         return a/(1-z)**2*exp((a-1)*log(x) - x)
@@ -52,3 +54,6 @@ gamma3by2 = gamma(3/2)
 
 print(gamma3by2)
 print(0.5*sqrt(pi))
+print(gamma(3))
+print(gamma(6))
+print(gamma(10))
