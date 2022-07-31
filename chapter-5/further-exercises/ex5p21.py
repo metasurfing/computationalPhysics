@@ -47,5 +47,5 @@ for kk in range(Nx):
         return Phi(X[kk,:],y)
     Ey[kk,:] = finiteDiff(Phiy,Y[kk,:], h = 10**-6)
 # fig2 = figure(2)
-streamplot(X,Y,Ex,Ey,color ='r',density = 0.75, linewidth = 0.5)
+streamplot(X,Y,-Ex,-Ey,color ='r',density = 0.75, linewidth = 0.5)
 show()
