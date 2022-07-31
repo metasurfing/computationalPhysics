@@ -80,6 +80,22 @@ def trapInt1D(func,a=0,b=1,N=4,opt='fixed',AbsTol=10**-3,pout = 0):
             Rm1 = R
             ii += 1
 
+    elif(opt == 'non-uniform'):
+        def step(x1,x2,f1,f2):
+            h = x2-x1
+            xm = 0.5*(x1+x2)
+            fm = func(xm);
+
+            I1 = 0.5*h*(f1 + f2)
+            I2 = 0.25*h*(f1 + 2*fm + f2)
+
+            if 1/3*abs(I2-I1) < AbsTol:
+                return 1/6*h*(f1 + 4*fm + f2)
+            else:
+                return step(x1,xm,f1,fm) + step(xm, x2, fm, f2)
+
+        return step(a,b,func(a),func(b))
+
     return 'The selected option in opt is not supported'
 
 #Implementation of Euler-Maclaurin integration for 1D functions

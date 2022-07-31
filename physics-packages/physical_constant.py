@@ -15,3 +15,7 @@ def Planck_bar():
 def Newton_Gravity():
     #Returns Newton's Gravitational constant
     return 6.674*10**-11
+
+def free_space_permittivity():
+    #Returns the electric permittivity of free space
+    return 8.85418782*10**-12

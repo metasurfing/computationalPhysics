@@ -15,3 +15,7 @@ s_em = eulerMaclaurin1D(f,a,b,N)
 
 print(s_trap)
 print(s_em)
+
+#This integration technique is very accurate for smooth functions
+#However, I would expect it to perform very poorly on noisy data or nonsmooth functions.
+#For this reason I don't expect it to be used in practice very often.
