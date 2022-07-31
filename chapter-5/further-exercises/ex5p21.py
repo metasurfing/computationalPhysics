@@ -1,10 +1,11 @@
 import sys
 sys.path.insert(0,'/Users/lukeszymanski/Documents/python/computationalPhysics/physics-packages/')
-from numpy import linspace, meshgrid, sqrt, ones, zeros, transpose
+from numpy import linspace, meshgrid, sqrt, ones, zeros, transpose, sin
 from math import pi
 from physical_constant import free_space_permittivity
 from pylab import imshow, show, colorbar, clim, figure, streamplot, contour
 from numDiff import finiteDiff
+from numInt import gaussQuadInt2D
 
 dx = 0.01;
 dy = 0.01;
@@ -48,4 +49,34 @@ for kk in range(Nx):
     Ey[kk,:] = finiteDiff(Phiy,Y[kk,:], h = 10**-6)
 # fig2 = figure(2)
 streamplot(X,Y,-Ex,-Ey,color ='r',density = 0.75, linewidth = 0.5)
+show()
+
+#Part c:
+L = 0.1
+q0 = 100
+def sigma(x,y):
+    return q0*sin(2*pi*x/L)*sin(2*pi*y/L)
+
+def integrand(xp,yp):
+    return sigma(xp,yp)/sqrt((X-xp)**2 + (Y-yp)**2)
+Phi_distribution = 1/(4*pi*e0)*gaussQuadInt2D(integrand,-L/2,L/2,-L/2,L/2,100)
+
+def Fx(x):
+    def integrandx(xp,yp):
+        return sigma(xp,yp)/sqrt((x-xp)**2 + (Y-yp)**2)
+    return 1/(4*pi*e0)*gaussQuadInt2D(integrandx,-L/2,L/2,-L/2,L/2,100)
+
+def Fy(y):
+    def integrandy(xp,yp):
+        return sigma(xp,yp)/sqrt((X-xp)**2 + (y-yp)**2)
+    return 1/(4*pi*e0)*gaussQuadInt2D(integrandy,-L/2,L/2,-L/2,L/2,100)
+
+Ex_distribution = finiteDiff(Fx,X,h=10**-4, type='central')
+Ey_distribution = finiteDiff(Fy,Y,h=10**-4, type='central')
+
+fig2 = figure(2)
+imshow(Phi_distribution,extent = [-Dx/2, Dx/2, -Dy/2, Dy/2])
+colorbar()
+contour(X,Y,Phi_distribution,linspace(-1*10**10,1*10**10,11),alpha = 0.5, colors = 'k')
+streamplot(X,Y,-Ex_distribution,-Ey_distribution,color ='b',density = 0.75, linewidth = 0.5)
 show()
