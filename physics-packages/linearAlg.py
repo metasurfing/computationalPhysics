@@ -1,7 +1,8 @@
 #This is a useful functions for solving linear equations
 def gaussElim(A,v,opts = 'partial-pivot'):
-    from numpy import array, empty, argmax, dot, zeros
+    from numpy import array, empty, argmax, dot, zeros, cdouble
     N = len(v)
+    array_dtype = A.dtype
     if(opts == 'partial-pivot'):
         for m in range(N):
             #Find the index of the element furthest from 0 in column m
@@ -29,7 +30,7 @@ def gaussElim(A,v,opts = 'partial-pivot'):
                 v[i] -= mult*v[m]
 
         #Define an empty array to store solution in
-        x = empty(N,float)
+        x = empty(N,array_dtype)
 
         #Solve for the vector by back substitution
         for m in range(N-1,-1,-1):
@@ -39,8 +40,8 @@ def gaussElim(A,v,opts = 'partial-pivot'):
         output_tuple = x
 
     elif(opts == 'LU'):
-        L = zeros([N,N])
-        U = zeros([N,N])
+        L = zeros([N,N],dtype=array_dtype)
+        U = zeros([N,N],dtype=array_dtype)
         swaps = empty(N,int)
 
         for m in range(N):
@@ -75,8 +76,8 @@ def gaussElim(A,v,opts = 'partial-pivot'):
         U = A.copy()
 
         #Define an empty array to store the solution in
-        x = empty(N,float)
-        y = empty(N,float)
+        x = empty(N,array_dtype)
+        y = empty(N,array_dtype)
 
         for m in range(N):
             if swaps[m] != m:
