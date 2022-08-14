@@ -1,7 +1,9 @@
 #This is a useful functions for solving linear equations
-def gaussElim(A,v,opts = 'partial-pivot'):
-    from numpy import array, empty, argmax, dot, zeros, cdouble
-    N = len(v)
+def gaussElim(Aa,va,opts = 'partial-pivot',above=1, below=1):
+    from numpy import array, empty, argmax, dot, zeros, cdouble, copy
+    N = len(va)
+    A = copy(Aa)
+    v = copy(va)
     array_dtype = A.dtype
     if(opts == 'partial-pivot'):
         for m in range(N):
@@ -94,6 +96,48 @@ def gaussElim(A,v,opts = 'partial-pivot'):
 
         #Assign output tuple to return
         output_tuple = [x,L,U,swaps]
+
+    elif opts == 'banded':
+    #implementation of Thomas algorithm for tridiagonal matrices
+        N = len(v)
+        idx = range(N)
+        if any(A[idx,idx] == 0):
+            print('Error: There is a zero on the diagonal and the \
+             Thomas algorithm requires all diagonal elements to be non-zero')
+            return 0
+
+        #Forward solve
+        for kk in range(N-below):
+
+            #Normalize the kth row by the diagonal element
+            A[kk,(kk+1):(kk+above+1)] /= A[kk,kk]
+            v[kk] /= A[kk,kk]
+
+            #Subtract the scaled kth row from the k+1th row
+            A[kk+1,(kk+1):(kk+above+1)] -= A[kk+1,kk]*A[kk,(kk+1):(kk+above+1)]
+            v[kk+1] -= A[kk+1,kk]*v[kk]
+
+            for bb in range(2,below+1):
+                #Subtract the scaled kth row from the k+1th row
+                A[kk+bb,(kk+bb-1):(kk+above+1)] -= A[kk+bb,kk]*A[kk,(kk+bb-1):(kk+above+1)]
+                v[kk+bb] -= A[kk+bb,kk]*v[kk]
+
+        for kk in range(N-below,N):
+            A[kk,(kk+1):N] /= A[kk,kk]
+            v[kk] /= A[kk,kk]
+
+            for jj in range(kk+1,N):
+                A[jj,jj:N] -= A[jj,kk]*A[kk,jj:N]
+                v[jj] -= A[jj,kk]*v[kk]
+
+        #Backsubstitution
+        x = empty(N,v.dtype)
+        x[N-1] = v[N-1]
+        for mm in range(N-2,-1,-1):
+            x[mm] = v[mm] - dot(A[mm,(mm+1):(mm+above+1)],x[(mm+1):(mm+above+1)])
+
+        output_tuple = x
+
     else:
         print('The option you have selected is not supported')
         output_tuple = []
