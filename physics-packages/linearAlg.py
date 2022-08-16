@@ -1,4 +1,5 @@
-#This is a useful functions for solving linear equations
+#This is a package for solving linear equations and other algorithms related to
+#linear algebra
 def gaussElim(Aa,va,opts = 'partial-pivot',above=1, below=1):
     from numpy import array, empty, argmax, dot, zeros, cdouble, copy
     N = len(va)
@@ -143,3 +144,47 @@ def gaussElim(Aa,va,opts = 'partial-pivot',above=1, below=1):
         output_tuple = []
 
     return output_tuple
+
+#Function that computes the Q-R factorization of a matrix
+def factQR(A):
+    from numpy import zeros, shape, empty, dot
+    from numpy.linalg import norm
+    M, N = shape(A)
+    v = zeros([M,N])
+
+    Q = empty([M,N])
+    R = zeros([M,N])
+
+    for ii in range(M):
+        v[:,ii] = A[:,ii].copy()
+
+    for ii in range(M):
+        R[ii,ii] = norm(v[:,ii],ord=2)
+        Q[:,ii] = v[:,ii].copy()/R[ii,ii]
+
+        for jj in range(ii+1,M):
+            R[ii,jj] = dot(Q[:,ii],v[:,jj])
+            v[:,jj] -= R[ii,jj]*Q[:,ii].copy()
+
+    return Q, R
+
+#Function that computes the eigenvalues and eigenvectors of a Hermitian matrix
+#using the iterative QR algorithm
+def eigH(A,tol=1e-6):
+    from numpy import zeros, shape, diag, transpose
+    from numpy.linalg import norm
+
+    M, N = shape(A)
+    V = zeros([M,N],A.dtype)
+    D = zeros([M,N],A.dtype)
+    Qi, Ri = factQR(A)
+    off_diag = norm(Qi-diag(diag(Qi)))/((M-1)*N)
+    D = Ri@Qi
+    V = Qi.copy()
+    while(off_diag>tol):
+        Qi, Ri = factQR(D)
+        V = V @ Qi
+        D = Ri@Qi
+        off_diag = norm(D-diag(diag(D)))/((M-1)*N)
+
+    return D, Qi
