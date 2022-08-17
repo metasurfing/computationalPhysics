@@ -171,20 +171,21 @@ def factQR(A):
 #Function that computes the eigenvalues and eigenvectors of a Hermitian matrix
 #using the iterative QR algorithm
 def eigH(A,tol=1e-6):
-    from numpy import zeros, shape, diag, transpose
-    from numpy.linalg import norm
+    from numpy import zeros, shape, diag, transpose, amax, amin, nonzero
 
     M, N = shape(A)
     V = zeros([M,N],A.dtype)
     D = zeros([M,N],A.dtype)
     Qi, Ri = factQR(A)
-    off_diag = norm(Qi-diag(diag(Qi)))/((M-1)*N)
     D = Ri@Qi
+    diagD = diag(D)
+    off_diag = amax(abs(D-diag(diag(D))))/amin(abs(diagD[nonzero(diagD)]))
     V = Qi.copy()
     while(off_diag>tol):
         Qi, Ri = factQR(D)
         V = V @ Qi
         D = Ri@Qi
-        off_diag = norm(D-diag(diag(D)))/((M-1)*N)
+        diagD = diag(D)
+        off_diag = amax(abs(D-diag(diag(D))))/amin(abs(diagD[nonzero(diagD)]))
 
-    return D, Qi
+    return D, V
