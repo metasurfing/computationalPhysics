@@ -19,3 +19,11 @@ def Newton_Gravity():
 def free_space_permittivity():
     #Returns the electric permittivity of free space
     return 8.85418782*10**-12
+
+def electron_charge():
+    #Returns charge of electron in Coloumbs
+    return 1.6022*10*-19
+
+def electron_mass():
+    #Returns the mass of the electron in kg
+    return 9.1094*10**-31
