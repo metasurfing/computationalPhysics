@@ -12,6 +12,11 @@ def Planck_bar():
     #Returns normalized Planck's constant
     return (6.62607015*10**-34)/(2*pi)
 
+def Planck():
+    from math import pi
+    #Returns normalized Planck's constant
+    return (6.62607015*10**-34)
+
 def Newton_Gravity():
     #Returns Newton's Gravitational constant
     return 6.674*10**-11
@@ -22,8 +27,8 @@ def free_space_permittivity():
 
 def electron_charge():
     #Returns charge of electron in Coloumbs
-    return 1.6022*10*-19
+    return -1.6022*1e-19
 
 def electron_mass():
     #Returns the mass of the electron in kg
-    return 9.1094*10**-31
+    return 9.1094*1e-31
