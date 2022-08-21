@@ -44,3 +44,54 @@ def overrelaxationNd(func,x,tol = 1e-6, count = 0, w = 0.5):
         return m0, ii
     else:
         return m0
+
+def binary_search(func,a,b,tol=1e-6):
+    from numpy import copy
+    dx = b-a
+    fa = func(a)
+    fb = func(b)
+    error = 1
+    if(fa*fb>0):
+        print('Both end points have the same sign. Returning a 0')
+        return 0
+    elif(fa*fb<0):
+        a_tmp = copy(a)
+        b_tmp = copy(b)
+        ii = 0
+        while(error>tol):
+            midpoint = (a_tmp+b_tmp)/2
+            fm = func(midpoint)
+            if fm == 0:
+                return midpoint
+            elif fm*fa<0:
+                b_tmp = midpoint
+            else:
+                a_tmp = midpoint
+            ii += 1
+            error = dx/2**ii
+        return (a_tmp + b_tmp)/2
+
+    elif(fa == 0):
+        return a
+    else:
+        return b
+
+#Newton's method
+def newton_method(func,x0, tol = 1e-6, grad = [], maxIter = 20):
+    delta = 1
+    xcur = x0
+    fval = func(x0)
+    ii = 0
+    if grad == []:
+        from numDiff import finiteDiff
+        def grad(x):
+            return finiteDiff(func,x,type = 'forward')
+
+    while(abs(delta)>tol and ii < maxIter):
+        delta = fval/grad(xcur)
+        xcur -= delta
+        fval = func(xcur)
+        ii += 1
+    if ii == maxIter:
+        print('Did not converge: max iterations reached.')
+    return xcur
