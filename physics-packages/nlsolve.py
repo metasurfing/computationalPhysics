@@ -141,7 +141,7 @@ def secant_method(func,x0, tol = 1e-6, maxIter = 20):
 
 #Golden Ratio search
 def golden_search(func, x1, x4, tol = 1e-6):
-    from numpy import sqrt
+    from numpy import sqrt, array
     z = (1+sqrt(5))/2
     dint = x4-x1
     x2 = x4 - dint/z
@@ -153,7 +153,7 @@ def golden_search(func, x1, x4, tol = 1e-6):
 
     if (f1<f2 and f1<f3) or (f4<f2 and f4<f3):
         print('The initial points don\'t bracket a minimum.')
-        return 0
+        return array([0])
 
     while dint>tol:
         if f2 < f3:
