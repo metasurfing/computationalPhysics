@@ -78,20 +78,95 @@ def binary_search(func,a,b,tol=1e-6):
 
 #Newton's method
 def newton_method(func,x0, tol = 1e-6, grad = [], maxIter = 20):
-    delta = 1
     xcur = x0
-    fval = func(x0)
-    ii = 0
-    if grad == []:
-        from numDiff import finiteDiff
-        def grad(x):
-            return finiteDiff(func,x,type = 'forward')
+    dim = len(xcur)
+    if dim == 1:
+        delta = 1
+        fval = func(x0)
+        ii = 0
+        if grad == []:
+            from numDiff import finiteDiff
+            def grad(x):
+                return finiteDiff(func,x,type = 'central')
 
+        while(abs(delta)>tol and ii < maxIter):
+            if abs(grad(xcur)) > 1e-14:
+                delta = fval/grad(xcur)
+            else:
+                print(grad(xcur))
+                print('Did not converge: Hit stationary point')
+                return xcur
+            xcur -= delta
+            fval = func(xcur)
+            ii += 1
+        if ii == maxIter:
+            print('Did not converge: max iterations reached.')
+    else:
+        from numpy import ones, amax
+        from linearAlg import gaussElim
+        delta = ones(dim,float)
+        ii  = 0
+        if grad == []:
+            print('You must supply a Jacobian matrix for dim > 1')
+            return 0
+        while(amax(abs(delta))>tol and ii < maxIter):
+            delta = gaussElim(grad(xcur),func(xcur))
+            xcur -= delta
+
+    return xcur
+
+#Secant method
+def secant_method(func,x0, tol = 1e-6, maxIter = 20):
+    delta = 1
+    #Generate initial points to approximate the derivative
+    x1 = x0
+    f1 = func(x0)
+    x2 = (1+1e-3)*x1
+    x3 = x2
+    f2 = func(x2)
+    ii = 0
     while(abs(delta)>tol and ii < maxIter):
-        delta = fval/grad(xcur)
-        xcur -= delta
-        fval = func(xcur)
+        if abs(f2-f1) < 1e-14:
+            return x2
+        delta = f2*(x2-x1)/(f2-f1)
+        x3 -= delta
+        f1 = f2
+        x1 = x2
+        f2 = func(x3)
+        x2 = x3
         ii += 1
     if ii == maxIter:
         print('Did not converge: max iterations reached.')
-    return xcur
+    return x3
+
+#Golden Ratio search
+def golden_search(func, x1, x4, tol = 1e-6):
+    from numpy import sqrt
+    z = (1+sqrt(5))/2
+    dint = x4-x1
+    x2 = x4 - dint/z
+    x3 = x1 + dint/z
+    f1 = func(x1)
+    f2 = func(x2)
+    f3 = func(x3)
+    f4 = func(x4)
+
+    if (f1<f2 and f1<f3) or (f4<f2 and f4<f3):
+        print('The initial points don\'t bracket a minimum.')
+        return 0
+
+    while dint>tol:
+        if f2 < f3:
+            x4, f4 = x3, f3
+            x3, f3 = x2, f2
+            dint = x4-x1
+            x2 = x4 - dint/z
+            f2 = func(x2)
+        else:
+            x1, f1 = x2, f2
+            x2, f2, = x3, f3
+            dint = x4 - x1
+            x3 = x1 + dint/z
+            f3 = func(x3)
+
+    return 0.5*(x1+x4)
