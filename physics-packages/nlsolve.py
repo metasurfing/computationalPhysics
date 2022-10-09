@@ -36,7 +36,7 @@ def overrelaxationNd(func,x,tol = 1e-6, count = 0, w = 0.5):
         m0 = (1+w)*func(m1)-w*m1
         if count == 1:
             ii += 1
-        if (1+w)*(m0-m1)/(m1-m2)-w == 0:
+        if all((1+w)*(m0-m1)/(m1-m2)-w == 0):
             return m0
         error = abs((m1 - m0)/(1-1/((1+w)*(m0-m1)/(m1-m2)-w)))
         m1, m2 = m0, m1

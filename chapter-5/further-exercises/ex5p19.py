@@ -74,6 +74,9 @@ for kk in range(Nk):
 
 # fig1 = figure(1)
 # plot(u,q(u))
+fig1 = figure(1)
+plot(xx, Intensity[0,:])
+
 fig2 = figure(2)
 imshow(Intensity)
 
