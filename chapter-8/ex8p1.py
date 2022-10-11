@@ -23,7 +23,7 @@ Vsol = empty([len(RC), N])
 for jj in range(0,len(RC)):
     def f(Vout,T):
         return 1/RC[jj] * (Vin(T) - Vout)
-    Vsol[jj,:] = rk4(f,t,t0,V0)
+    Vsol[jj,:] = rk4(f,t,V0,t0)
 
 plot(t,Vsol[0,:])
 plot(t,Vsol[1,:])
