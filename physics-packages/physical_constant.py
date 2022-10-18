@@ -32,3 +32,6 @@ def electron_charge():
 def electron_mass():
     #Returns the mass of the electron in kg
     return 9.1094*1e-31
+def sun_mass():
+    #Returns the mass of the Sun in kg
+    return 1.989*1e30
