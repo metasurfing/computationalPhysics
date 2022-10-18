@@ -14,7 +14,7 @@ for kk in range(len(u)):
     def func(x):
         return tanh(x) - u[kk]
 
-    xsol[kk] = newton_method(func,0,tol = 1e-12, grad = gradient, maxIter = 10)
+    xsol[kk] = newton_method(func,[0.1],tol = 1e-6, grad = gradient, maxIter = 10)
 
 plot(u,xsol)
 show()
