@@ -76,3 +76,37 @@ def leapfrog(f,t,x0,h):
         x += h/2*f(xt,tk)
 
     return [x_sol, t_sol]
+
+def verlet(f,t,x0,v0,t0,h):
+    from numpy import empty
+    Nt = int((t[1]-t[0])//h + 1)
+
+    if isinstance(x0,(int, float)):
+        Nx = 1
+    else:
+        Nx = len(x0)
+
+    x_sol = empty([Nx, Nt], float)
+    v_sol = empty([Nx, Nt], float)
+    t_sol = empty(Nt,float)
+
+    v_sol[:,0] = v0
+    x_sol[:,0] = x0
+    t_sol[0] = t0
+
+    x = x0.copy()
+    v = v0.copy()
+    tx = t0
+    v += h/2*f(x,tx)
+
+
+    for tt in range(1,Nt):
+        x += h*v
+        tx += h
+        t_sol[tt] = tx
+        x_sol[:,tt] = x.copy()
+        k = h*f(x,tx)
+        v_sol[:,tt] = v + k/2
+        v += k
+
+    return [x_sol, v_sol, t_sol]
