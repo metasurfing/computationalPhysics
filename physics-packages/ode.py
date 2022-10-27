@@ -110,3 +110,53 @@ def verlet(f,t,x0,v0,t0,h):
         v += k
 
     return [x_sol, v_sol, t_sol]
+
+def burlisch_stoer(f,t,x0,t0,H=0,delta=1e-8):
+    from numpy import array, floor, append, empty, sqrt, sum
+    #Implementation of error function is on positions for a 2D problem
+    if isinstance(x0,(int, float)):
+        Nx = 1
+    else:
+        Nx = len(x0)
+
+    if H == 0:
+        H = (t[1]-t[0])/2
+
+    N = int(floor((t[1]-t[0])/H) + 1)
+    x = x0.copy()
+    t = t0
+    x_sol = array([x0],float)
+    for tt in range(N):
+        #First modified midpoint step
+        x1 = x + H/2*f(x,t)
+        x2 = x + H*f(x1,t+H/2)
+
+        R1 = empty([1,Nx],float)
+        R1[0] = 0.5*(x1 + x2 + 0.5*H*f(x2,t+H))
+        nn = 1
+        error = 2*H*delta
+
+        while error>delta*H:
+            nn += 1
+            h = H/nn
+            #Modified midpoint method
+            x1 = x + 0.5*h*f(x,t)
+            x2 = x + h*f(x1,t+h/2)
+            for ii in range(nn-1):
+                x1 += h*f(x2,t+(ii-1)*h)
+                x2 += h*f(x1,t+(ii-1/2)*h)
+
+            R2 = R1
+            R1 = empty([nn,Nx],float)
+            R1[0] = 0.5*(x1 + x2 + 0.5*h*f(x2,t+H))
+
+            for mm in range(1,nn):
+                epsilon = (R1[mm-1]-R2[mm-1])/((nn/(nn-1))**(2*mm) - 1)
+                R1[mm] = R1[mm-1] + epsilon
+            error = abs(sqrt(epsilon[0]**2 + epsilon[2]**2))
+
+        x = R1[nn-1]
+        x_sol = append(x_sol,[x],axis=0)
+        t += H
+
+    return x_sol
