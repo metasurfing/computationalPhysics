@@ -36,5 +36,5 @@ def sun_mass():
     #Returns the mass of the Sun in kg
     return 1.989*1e30
 def earth_mass():
-    #Returns the mass of the Sun in kg
+    #Returns the mass of the Earth in kg
     return 5.9722*1e24
