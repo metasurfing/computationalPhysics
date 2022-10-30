@@ -1,7 +1,12 @@
 #This is a package for solving nonlinear equations
 def relaxationNd(func,x,tol = 1e-6, count = 0, maxIter = 20):
     from numpy import amax, ones
-    nvars = len(x)
+
+    if isinstance(x,(int, float)):
+        nvars = 1
+    else:
+        nvars = len(x)
+
     error = ones(nvars,float)
 
     m2 = func(x)
@@ -12,7 +17,7 @@ def relaxationNd(func,x,tol = 1e-6, count = 0, maxIter = 20):
         m0 = func(m1)
         if count == 1:
             ii += 1
-        if all(2*m1-m2-m0 == 0):
+        if all([2*m1-m2-m0 == 0]):
             return m0
         error = abs((m1 - m0)**2/(2*m1-m2-m0))
         m1, m2 = m0, m1
@@ -25,7 +30,10 @@ def relaxationNd(func,x,tol = 1e-6, count = 0, maxIter = 20):
 
 def overrelaxationNd(func,x,tol = 1e-6, count = 0, w = 0.5):
     from numpy import amax, ones
-    nvars = len(x)
+    if isinstance(x,(int, float)):
+        nvars = 1
+    else:
+        nvars = len(x)
     error = ones(nvars,float)
 
     m2 = func(x)
@@ -36,7 +44,7 @@ def overrelaxationNd(func,x,tol = 1e-6, count = 0, w = 0.5):
         m0 = (1+w)*func(m1)-w*m1
         if count == 1:
             ii += 1
-        if all((1+w)*(m0-m1)/(m1-m2)-w == 0):
+        if all([(1+w)*(m0-m1)/(m1-m2)-w == 0]):
             return m0
         error = abs((m1 - m0)/(1-1/((1+w)*(m0-m1)/(m1-m2)-w)))
         m1, m2 = m0, m1
