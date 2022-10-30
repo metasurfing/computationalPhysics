@@ -143,7 +143,7 @@ def simpInt1D(func,a=0,b=1,N=4,opt='fixed',AbsTol=10**-3,pout=0):
         for kk in range(1,N//2):
             so += func(a+2*kk*h)
     else:
-        print("N most be even for simpInt to work correctly")
+        print("N must be even for simpInt to work correctly")
         return 0
 
     s = s0 + 4*se + 2*so
@@ -210,7 +210,7 @@ def gaussQuadInt2D(func,ax=0,bx=1,ay=0,by=1,N=4,xk=[],yk=[],wkx=[],wky = []):
 
     #Calculate the integral
     s = 0.0
-    #This is really inefficient but quick and dirty may want to find a way
+    #This is really inefficient but quick and dirty, may want to find a way
     #to vectorize this
     for ii in range(N):
         for jj in range(N):
