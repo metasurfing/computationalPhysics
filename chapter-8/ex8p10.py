@@ -4,7 +4,7 @@ path.insert(0,'/Users/lukeszymanski/Documents/python/computationalPhysics/physic
 from ode import rk4
 from numpy import empty, linspace, array, sqrt, abs, amin, rint, append, reshape, transpose
 from physical_constant import Newton_Gravity, sun_mass
-from pylab import plot, show, xlabel, ylabel, figure
+from pylab import plot, show, xlabel, ylabel, figure, axis
 
 
 G = Newton_Gravity()
@@ -26,7 +26,8 @@ def f(r,t):
 
 x0 = [4e12, 0, 0, 500]
 t0 = 0.0
-tf = 60*60*24*360*50*2
+tf = 60*60*24*365*50*2
+print(tf)
 t = [t0, tf]
 h = 60*60*3
 # tic = perf_counter()
@@ -37,10 +38,10 @@ h = 60*60*3
 #Larger step sizes cause the orbit to quickly diverge. The integration took
 #approximately 4.5 seconds.
 
-delta = 1e3/(360*60*60*24)
+delta = 1e3/(365*60*60*24)
 tcur = t0
 x0cur = x0.copy()
-h = 60*60*360
+h = 60*60*365*24
 tarray = array(t0,float)
 x_sol = array(x0cur,float)
 tic = perf_counter()
@@ -63,7 +64,8 @@ while tcur < tf:
         #Increment time to finale time
         tcur += hp
         #Increase step size for next go around
-        hopt = rho*h
+        hopt = h*rho**(1/4)
+
         h = amin([hopt,2*h])
         #add next time stamp to array
         tarray = append(tarray, tcur)
@@ -81,6 +83,7 @@ figure(1)
 #Plot orbit
 plot(x_sol[2,:],x_sol[0,:])
 plot(x_sol[2,:],x_sol[0,:],'o')
+axis('equal')
 
 figure(2)
 #Plot step size versus step
