@@ -17,6 +17,10 @@ def Planck():
     #Returns normalized Planck's constant
     return (6.62607015*10**-34)
 
+def standard_gravity():
+    #Returns standard gravity on earth in m/s^2
+    return 9.80665
+
 def Newton_Gravity():
     #Returns Newton's Gravitational constant
     return 6.674*10**-11
