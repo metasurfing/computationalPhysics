@@ -1,5 +1,6 @@
 from numpy import empty, zeros, max
 from pylab import imshow, gray, show
+from time import perf_counter
 
 #Constants
 M = 100
@@ -17,7 +18,9 @@ phi_prime[:,M] = phi[:,M]
 
 #Main loop
 delta = 1.0
+counter = 0
 
+tic = perf_counter()
 while delta>target:
 
     phi_prime[1:M,1:M] = 0.25*(phi[2:(M+1),1:M] + phi[0:(M-1),1:M] + \
@@ -26,7 +29,10 @@ while delta>target:
     delta = max(abs(phi-phi_prime))
 
     phi, phi_prime = phi_prime, phi
-
+    counter += 1
+toc = perf_counter()
+print(toc - tic)
+print(counter)
 imshow(phi)
 gray()
 show()
