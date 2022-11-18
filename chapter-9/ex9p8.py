@@ -63,6 +63,6 @@ for kk in range(1,Nt):
 # interference pattern.
 # The phase progression means the pulse (gaussian) is propagating along the axis; however, since the gaussian
 # envelope is not a solution to the wave equation the envelope disperses as it propagates due to the different
-# wavenumbers that compose the gaussian. Due to the hard boundary conditions the wavefunction reflects off the
+# wavenumbers that compose the gaussian. The hard boundary condition causes it to reflect off the
 # boundaries until the wave is fully dispersed and the different wavenumbers composing the gaussian set up
 # the standing wave interference pattern.
