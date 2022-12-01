@@ -1,0 +1,29 @@
+Outline of solution to 10.6:
+
+I = int(f(x),a,b) approximately equal to I = p*A where p = k/N and A = (b-a)*H.
+Therefore, I = (b-a)*H*(k/N).
+If si = 1 for hits and zeros for misses then sum(si,0,N) = k and k/N = <s>
+So I = (b-a)*H*<s>.
+
+std_dev(s) = (b-a)*H*sqrt(var(s)/N)
+std_dev(mv) = (b-a)*H*sqrt(var(f)/N)
+
+so std_dev(s) >= std_dev(mv) iff H^2*var(s) >= var(f)
+
+var(f) = <f^2> - <f>^2
+var(s) = <s^2> - <s>^2
+<s> = 1/N * sum(si,0,N) = p where p = I/A
+<s^2> = 1/N * sum(si^2,0,N) = p
+var(s) = p*(1-p)
+
+I = (b-a) * <f> (by definition of the average value)
+A = (b-a) * H (as above)
+so p = <f>/H
+
+so H^2*var(s) = <f> * (H - <f>) = <f>*H - <f>^2
+
+var(f) <= H^2 * var(s) => <f^2> <= <f>*H => <f*(f-H)> <= 0 (by linearity of expected value operator)
+
+By assumptions 0<=f<=H,
+Therefore, f-H <= 0 and f>=0 and the product f*(f-H) <= 0 always.
+Therefore <f*(f-H)>  <= 0 always.
