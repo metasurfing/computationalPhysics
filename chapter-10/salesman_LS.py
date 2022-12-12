@@ -1,6 +1,6 @@
 from math import sqrt, exp
 from numpy import empty
-from vpython import sphere, curve, vector, curve, canvas, rate
+from vpython import sphere, curve, vector, canvas, rate
 from random import random, randrange
 
 
